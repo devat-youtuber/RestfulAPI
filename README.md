@@ -61,7 +61,7 @@ II - How to use?
     > DELETE /api/products/:id
 
   2. Filter        
-    gt = greater than, gte = greater than or equa.       
+    gt = greater than, gte = greater than or equal.       
     lt = lesser than, lte = lesser than or equal.    
     
     > GET /api/products?price=15
