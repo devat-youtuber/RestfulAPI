@@ -1,4 +1,6 @@
-export const checkProductData = async (req, res, next) => {
+import { Request, Response, NextFunction } from 'express'
+
+export const checkProductData = async (req: Request, res: Response, next: NextFunction) => {
   // const { title, price, description, category, image } = req.body;
 
   const errors = [];

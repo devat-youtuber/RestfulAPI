@@ -1,26 +1,30 @@
+import { Request, Response } from 'express'
 import Products from "../models/producModel"
 import { APIfeatures } from "../lib/features";
 
 const productCtr = {
-  getProducts: async (req, res) => {
+  getProducts: async (req: Request, res: Response) => {
     try {
       const features = new APIfeatures(Products.find(), req.query)
       .paginating().sorting().searching().filtering()
 
+      const counting = new APIfeatures(Products.find(), req.query)
+      .searching().filtering().counting()
+
       const result = await Promise.allSettled([
         features.query,
-        Products.countDocuments() //count number of products.
+        counting.query, //count number of products.
       ])
       
       const products = result[0].status === 'fulfilled' ? result[0].value : [];
       const count = result[1].status === 'fulfilled' ? result[1].value : 0;
 
       return res.status(200).json({products, count})
-    } catch (err) {
+    } catch (err: any) {
       return res.status(500).json({msg: err.message})
     }
   },
-  getProduct: async(req, res) => {
+  getProduct: async(req: Request, res: Response) => {
     try {
       const product = await Products.findById(req.params.id)
 
@@ -28,11 +32,11 @@ const productCtr = {
         return res.status(404).json({msg: 'This product does not exist.'})
 
       return res.status(200).json(product)
-    } catch (err) {
+    } catch (err: any) {
       return res.status(500).json({msg: err.message})
     }
   },
-  addProduct: async (req, res) => {
+  addProduct: async (req: Request, res: Response) => {
     try {
       const { title, price, description, category, image } = req.body;
 
@@ -42,11 +46,11 @@ const productCtr = {
       await newProduct.save()
 
       return res.status(200).json(newProduct)
-    } catch (err) {
+    } catch (err: any) {
       return res.status(500).json({msg: err.message})
     }
   },
-  updateProduct: async (req, res) => {
+  updateProduct: async (req: Request, res: Response) => {
     try {
       const { title, price, description, category, image } = req.body;
       
@@ -62,7 +66,7 @@ const productCtr = {
       return res.status(500).json({msg: err.message})
     }
   },
-  deleteProduct: async (req, res) => {
+  deleteProduct: async (req: Request, res: Response) => {
     try {
       
       const product = await Products.findByIdAndDelete(req.params.id)
@@ -71,7 +75,7 @@ const productCtr = {
         return res.status(404).json({msg: 'This product does not exist.'})
 
       return res.status(200).json({msg: 'Delete Success!'})
-    } catch (err) {
+    } catch (err: any) {
       return res.status(500).json({msg: err.message})
     }
   }

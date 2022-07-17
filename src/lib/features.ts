@@ -1,9 +1,15 @@
 // Constructors and object instances
-export function APIfeatures(query, queryString){
-  this.query = query; // Products.find()
-  this.queryString = queryString; // req.query
+export class APIfeatures {
+  query: any;
+  queryString: any;
 
-  this.paginating = () => {
+  constructor(query: any, queryString: any){
+    this.query = query; // Products.find()
+    this.queryString = queryString; // req.query
+  }
+ 
+
+  paginating = () => {
     const page = this.queryString.page * 1 || 1;
     const limit = this.queryString.limit * 1 || 5;
     const skip = limit * (page - 1)
@@ -13,7 +19,7 @@ export function APIfeatures(query, queryString){
 
   //this.query = Products.find().limit(limit).skip(skip)
 
-  this.sorting = () => {
+  sorting = () => {
     const sort = this.queryString.sort || '-createdAt';
     this.query = this.query.sort(sort)
     return this;
@@ -21,7 +27,7 @@ export function APIfeatures(query, queryString){
 
   //this.query = Products.find().limit(limit).skip(skip).sort(sort)
 
-  this.searching = () => {
+  searching = () => {
     const search = this.queryString.search;
     if(search){
       this.query = this.query.find({
@@ -36,7 +42,7 @@ export function APIfeatures(query, queryString){
   //     $text: { $search: search }
   //  }).limit(limit).skip(skip).sort(sort)
 
-  this.filtering = () => {
+  filtering = () => {
     const queryObj = { ...this.queryString }
 
     const excludedFields = ['page', 'sort', 'limit', 'search']
@@ -52,4 +58,9 @@ export function APIfeatures(query, queryString){
   //this.query = Products.find().find({
   //     {"price":{"$gt":"56.99"}}
   //  }).limit(limit).skip(skip).sort(sort)
+
+  counting = () => {
+    this.query = this.query.count()
+    return this;
+  }
 }
